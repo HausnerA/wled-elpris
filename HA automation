@@ -1,0 +1,142 @@
+alias: WLED elpris
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.energi_data_service
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: >-
+              {% set max = state_attr('sensor.energi_data_service',
+              'today_max').price|round(2) %}
+
+              {% set min = state_attr('sensor.energi_data_service',
+              'today_min').price|round(2) %}
+
+              {% set price = states('sensor.energi_data_service')|round(2) %}
+
+              {{ ((price - min) / ((max - min)/100))|round(0) <= 25 }}
+        sequence:
+          - service: light.turn_on
+            data:
+              effect: Percent
+              rgb_color:
+                - 31
+                - 234
+                - 55
+            target:
+              entity_id: light.wled
+          - service: number.set_value
+            data:
+              value: >-
+                {% set max = state_attr('sensor.energi_data_service',
+                'today_max').price|round(2) %} {% set min =
+                state_attr('sensor.energi_data_service',
+                'today_min').price|round(2) %} {% set price =
+                states('sensor.energi_data_service')|round(2) %} {{ ((price -
+                min) / ((max - min)/100))|round(0)}}
+            target:
+              entity_id: number.wled_intensity
+      - conditions:
+          - condition: template
+            value_template: >-
+              {% set max = state_attr('sensor.energi_data_service',
+              'today_max').price|round(2) %}
+
+              {% set min = state_attr('sensor.energi_data_service',
+              'today_min').price|round(2) %}
+
+              {% set price = states('sensor.energi_data_service')|round(2) %}
+
+              {{ 25 < ((price - min) / ((max - min)/100))|round(0) <= 50 }}
+        sequence:
+          - service: light.turn_on
+            data:
+              effect: Percent
+              rgb_color:
+                - 244
+                - 229
+                - 62
+            target:
+              entity_id: light.wled
+          - service: number.set_value
+            data:
+              value: >-
+                {% set max = state_attr('sensor.energi_data_service',
+                'today_max').price|round(2) %} {% set min =
+                state_attr('sensor.energi_data_service',
+                'today_min').price|round(2) %} {% set price =
+                states('sensor.energi_data_service')|round(2) %} {{ ((price -
+                min) / ((max - min)/100))|round(0)}}
+            target:
+              entity_id: number.wled_intensity
+      - conditions:
+          - condition: template
+            value_template: >-
+              {% set max = state_attr('sensor.energi_data_service',
+              'today_max').price|round(2) %}
+
+              {% set min = state_attr('sensor.energi_data_service',
+              'today_min').price|round(2) %}
+
+              {% set price = states('sensor.energi_data_service')|round(2) %}
+
+              {{ 50 < ((price - min) / ((max - min)/100))|round(0) <= 75 }}
+        sequence:
+          - service: light.turn_on
+            data:
+              effect: Percent
+              rgb_color:
+                - 242
+                - 158
+                - 13
+            target:
+              entity_id: light.wled
+          - service: number.set_value
+            data:
+              value: >-
+                {% set max = state_attr('sensor.energi_data_service',
+                'today_max').price|round(2) %} {% set min =
+                state_attr('sensor.energi_data_service',
+                'today_min').price|round(2) %} {% set price =
+                states('sensor.energi_data_service')|round(2) %} {{ ((price -
+                min) / ((max - min)/100))|round(0)}}
+            target:
+              entity_id: number.wled_intensity
+      - conditions:
+          - condition: template
+            value_template: >-
+              {% set max = state_attr('sensor.energi_data_service',
+              'today_max').price|round(2) %}
+
+              {% set min = state_attr('sensor.energi_data_service',
+              'today_min').price|round(2) %}
+
+              {% set price = states('sensor.energi_data_service')|round(2) %}
+
+              {{ ((price - min) / ((max - min)/100))|round(0) > 75 }}
+        sequence:
+          - service: light.turn_on
+            data:
+              effect: Percent
+              rgb_color:
+                - 234
+                - 31
+                - 51
+            target:
+              entity_id: light.wled
+          - service: number.set_value
+            data:
+              value: >-
+                {% set max = state_attr('sensor.energi_data_service',
+                'today_max').price|round(2) %} {% set min =
+                state_attr('sensor.energi_data_service',
+                'today_min').price|round(2) %} {% set price =
+                states('sensor.energi_data_service')|round(2) %} {{ ((price -
+                min) / ((max - min)/100))|round(0)}}
+            target:
+              entity_id: number.wled_intensity
+mode: single
